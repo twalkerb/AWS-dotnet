@@ -1,8 +1,6 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using Amazon;
 using Amazon.Athena;
 using Amazon.Athena.Model;
 
@@ -50,12 +48,12 @@ namespace AthenaApp
 
         private async Task FilterTableItems()
         {
-            Console.WriteLine("---Filter Table Items---");            
+            Console.WriteLine("---Filter Table Items---");
             try
             {
-                long[] timestamps = new long[] {1638189974724, 1639993264183};
+                long[] timestamps = new long[] { 1638189974724, 1639993264183 };
                 var request = new StartQueryExecutionRequest();
-                request.QueryString = "Select eventid, eventtimestamp, eventdata," 
+                request.QueryString = "Select eventid, eventtimestamp, eventdata,"
                 + " eventtype,eventsource,eventcounter"
                 + " From"
                 + " events"
@@ -86,6 +84,7 @@ namespace AthenaApp
                     events.Add(res);
                 }
                 Console.WriteLine(events.Count);
+                Console.WriteLine("---Filter Table Items: END---");
             }
             catch (InvalidRequestException ex)
             {
@@ -124,6 +123,7 @@ namespace AthenaApp
                     events.Add(res);
                 }
                 Console.WriteLine(events.Count);
+                Console.WriteLine("---Querying Table: END---");
             }
             catch (InvalidRequestException ex)
             {
