@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "awsAthenaApp",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/AthenaApp/bin/Debug/netcoreapp3.1/AthenaApp.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/AthenaApp",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+    ]
+}
