@@ -36,9 +36,9 @@ namespace AthenaApp
         {
             try
             {
-                Console.WriteLine("Running Sample Query");
-                await QueryTable();
-
+                Console.WriteLine("---Running Sample Query---");
+                await GetAllTableItems();
+                await FilterTableItems();
             }
             catch (Exception ex)
             {
@@ -48,7 +48,52 @@ namespace AthenaApp
             await Task.CompletedTask;
         }
 
-        private async Task QueryTable()
+        private async Task FilterTableItems()
+        {
+            Console.WriteLine("---Filter Table Items---");            
+            try
+            {
+                long[] timestamps = new long[] {1638189974724, 1639993264183};
+                var request = new StartQueryExecutionRequest();
+                request.QueryString = "Select eventid, eventtimestamp, eventdata," 
+                + " eventtype,eventsource,eventcounter"
+                + " From"
+                + " events"
+                + $" where cast(eventtimestamp as bigint) >= {timestamps[0]}"
+                + $" and cast(eventtimestamp as bigint) <= {timestamps[1]}"
+                + " and eventid like '%product%'";
+
+                request.QueryExecutionContext = context;
+                request.ResultConfiguration = resultConfiguration;
+                request.WorkGroup = "primary";
+
+                var response = await client.StartQueryExecutionAsync(request);
+                List<Dictionary<string, string>> queryResults = await GetQueryResults(response.QueryExecutionId);
+                var events = new List<Models.Events>();
+                foreach (var result in queryResults)
+                {
+                    var res = new Models.Events();
+                    res.eventId = result["eventid"];
+                    res.eventTimestamp = long.Parse(result["eventtimestamp"]);
+                    res.eventSource = result["eventsource"];
+                    res.eventData = result["eventdata"];
+                    res.eventType = result["eventtype"];
+                    res.eventCounter = int.Parse(result["eventcounter"]);
+                    res.eventDate = DateTimeOffset.FromUnixTimeMilliseconds
+                    (
+                        long.Parse(result["eventtimestamp"])
+                    ).DateTime;
+                    events.Add(res);
+                }
+                Console.WriteLine(events.Count);
+            }
+            catch (InvalidRequestException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private async Task GetAllTableItems()
         {
             Console.WriteLine("---Querying Table---");
             try
@@ -133,12 +178,12 @@ namespace AthenaApp
                             row.Data[i].VarCharValue
                         );
                     }
-                    items.Add(dict);                    
+                    items.Add(dict);
                     if (queryResultResponse.NextToken != null)
                         queryResultRequest.NextToken = queryResultResponse.NextToken;
                 }
             } while (queryResultResponse.NextToken != null);
-            
+
             // Removed the column Names from the zero index.
             items.RemoveAt(0);
             return items;
