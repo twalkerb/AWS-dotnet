@@ -12,29 +12,14 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "build",
             "command": "dotnet",
             "type": "process",
             "args": [
-                "publish",
-                "${workspaceFolder}/AthenaApp/AthenaApp.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
+                "build",
+                "${workspaceFolder}/CloudWatch/CloudWatch.csproj"                
             ],
             "problemMatcher": "$msCompile"
         },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "${workspaceFolder}/AthenaApp/AthenaApp.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
-            ],
-            "problemMatcher": "$msCompile"
-        }
     ]
 }

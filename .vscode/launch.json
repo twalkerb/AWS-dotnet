@@ -13,5 +13,17 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
+        {
+            "name": "awsCloudWatch",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/CloudWatch/bin/Debug/netcoreapp3.1/CloudWatch.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CloudWatch",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
     ]
 }
