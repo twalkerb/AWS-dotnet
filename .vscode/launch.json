@@ -25,5 +25,17 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
+        {
+            "name": "awsDynamoDb",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/DynamoDB/bin/Debug/netcoreapp3.1/DynamoDB.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/DynamoDB",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
     ]
 }

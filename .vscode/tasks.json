@@ -21,5 +21,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/DynamoDB/DynamoDB.csproj"                
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
