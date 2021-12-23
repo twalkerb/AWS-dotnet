@@ -67,39 +67,58 @@ namespace DynamoDB
         private async Task TransactEvents(List<Event> events)
         {
             Console.WriteLine("---Begin: Events Transaction---");
-            var groupedEvents = events
+            try
+            {
+                var groupedEvents = events
                         .GroupBy(x => new { x.eventTimestamp })
                         .ToList();
 
-            foreach (var data in groupedEvents)
-            {
-                var request = new TransactWriteItemsRequest
+                foreach (var data in groupedEvents)
                 {
-                    TransactItems = new List<TransactWriteItem>
+                    var request = new TransactWriteItemsRequest
+                    {
+                        TransactItems = new List<TransactWriteItem>
                     {
                         new TransactWriteItem
                         {
                             Put = new Put
                             {
-                                TableName = "events-index",
+                                TableName = EventIndexTableName,
                                 Item = new Dictionary<string, AttributeValue>()
                                 {
                                     {
                                         "eventTimestamp", new AttributeValue { N = data.Key.eventTimestamp.ToString() }
                                     },
                                     {
-                                        "counter", new AttributeValue { N = data.Count().ToString() }
+                                        "counter", new AttributeValue { N = (data.Count()).ToString() }
                                     }
-                                }
+                                },
+                                ReturnValuesOnConditionCheckFailure = ReturnValuesOnConditionCheckFailure.ALL_OLD
                             }
                         }
-                    },
-                    // ClientRequestToken = "IdempotencyToken"
-                };
-                var response = await client.TransactWriteItemsAsync(request);
-                Console.WriteLine($"Transaction sent with - Timestamp - {data.Key.eventTimestamp} PUTs - {response.HttpStatusCode}");
+                    }
+                    };
+                    var response = await client.TransactWriteItemsAsync(request);
+                    Console.WriteLine($"Transaction sent with - Timestamp - {data.Key.eventTimestamp} PUTs - {response.HttpStatusCode}");
+                }
             }
-            Console.WriteLine("---End: Events Transaction---");
+            catch (TransactionCanceledException e)
+            {
+                Console.WriteLine(e.CancellationReasons[0].Message);
+            }
+            catch (AmazonDynamoDBException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (AmazonServiceException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            Console.WriteLine($"---End: Events Transaction---");
         }
     }
 }

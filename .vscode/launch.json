@@ -37,5 +37,17 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
+        {
+            "name": "Experimental",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Experimental/bin/Debug/netcoreapp3.1/Experimental.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Experimental",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
     ]
 }

@@ -31,5 +31,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Experimental/Experimental.csproj"                
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
