@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "awsAthenaApp",
+            "name": "Athena",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -14,7 +14,7 @@
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
-            "name": "awsCloudWatch",
+            "name": "CloudWatch",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -26,7 +26,7 @@
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
-            "name": "awsDynamoDb",
+            "name": "DynamoDB",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
@@ -45,6 +45,18 @@
             "program": "${workspaceFolder}/Experimental/bin/Debug/netcoreapp3.1/Experimental.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Experimental",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Lambda",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Lambda/test/Lambda.Tests/bin/Debug/netcoreapp3.1/Lambda.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Lambda/test/Lambda.Tests",
             "console": "externalTerminal",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"

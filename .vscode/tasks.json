@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/AthenaApp/AthenaApp.csproj"                
+                "${workspaceFolder}/AthenaApp/AthenaApp.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -17,7 +17,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/CloudWatch/CloudWatch.csproj"                
+                "${workspaceFolder}/CloudWatch/CloudWatch.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -27,7 +27,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/DynamoDB/DynamoDB.csproj"                
+                "${workspaceFolder}/DynamoDB/DynamoDB.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -37,7 +37,17 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Experimental/Experimental.csproj"                
+                "${workspaceFolder}/Experimental/Experimental.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Lambda/test/Lambda.Tests/Lambda.Tests.csproj"                
             ],
             "problemMatcher": "$msCompile"
         },
