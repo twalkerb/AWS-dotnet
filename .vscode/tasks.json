@@ -51,5 +51,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Lambda-Functions/S3Operations/test/S3Operations.Tests/S3Operations.Tests.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }

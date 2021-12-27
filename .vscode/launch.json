@@ -61,5 +61,17 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
+        {
+            "name": "Lambda-Dynamo-S3",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Lambda-Functions/S3Operations/test/S3Operations.Tests/bin/Debug/netcoreapp3.1/S3Operations.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Lambda-Functions/S3Operations/test/S3Operations.Tests",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
     ]
 }
