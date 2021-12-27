@@ -23,17 +23,28 @@ namespace S3Operations
             );
         }
 
-        public async Task WriteObject(object obj) 
-        {
-            string key = String.Format("{0}.json", DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ss"));
-            var request = new PutObjectRequest()
+        public async Task WriteObject(string key, byte[] bytes, string contentType)
+        {            
+            using (var memStream = new MemoryStream(bytes))
             {
-                BucketName = bucket,
-                Key = key,
-                ContentBody = JsonConvert.SerializeObject(obj),
-                ContentType = "application/json",
-            };            
-            await client.PutObjectAsync(request);
-        }        
+                var request = new PutObjectRequest
+                {
+                    BucketName = bucket,
+                    Key = key,
+                    InputStream = memStream,
+                    ContentType = contentType,
+                };
+                await client.PutObjectAsync(request);
+            }
+        }
+
+        public Task WriteJson(object obj)
+        {
+            return WriteObject(
+                    key: String.Format("{0}.json", DateTime.UtcNow.ToString("yyyy-MM-dd HH-mm-ss")),
+                    bytes: Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj, Formatting.Indented)),
+                    contentType: "application/json"
+                );
+        }
     }
 }

@@ -37,8 +37,9 @@ namespace S3Operations
             if(!string.IsNullOrEmpty(input))
             {
                 var events = await DynamoDBOperations.GetAllEvents();
-                await S3FileOperations.WriteObject(events);
-
+                context.Logger.Log($"----Fetched records from DynamoDB: {events.Count()}----");
+                await S3FileOperations.WriteJson(events);
+                context.Logger.Log("----Created File on S3 Bucket----");
                 return "Executed!";
             }
             return "Failed to execute!";
