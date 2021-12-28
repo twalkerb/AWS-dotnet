@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
 using Amazon.Lambda.SNSEvents;
-
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
@@ -19,11 +19,15 @@ namespace SnsProcessor
         /// the AWS credentials will come from the IAM role associated with the function and the AWS region will be set to the
         /// region the Lambda function is executed in.
         /// </summary>
+        DynamoDb DynamoDb;
         public Function()
-        {
-
+        {            
         }
 
+        public Function(DynamoDb dynamodb)
+        {
+            DynamoDb = dynamodb;
+        }
 
         /// <summary>
         /// This method is called for every Lambda invocation. This method takes in an SNS event object and can be used 
@@ -44,7 +48,9 @@ namespace SnsProcessor
         {
             context.Logger.LogLine($"Processed record {record.Sns.Message}");
 
-            // TODO: Do interesting work based on the new message
+            var message = JsonSerializer.Deserialize<EventMessage>(record.Sns.Message);
+            await DynamoDb.InsertTable(message);
+            
             await Task.CompletedTask;
         }
     }
