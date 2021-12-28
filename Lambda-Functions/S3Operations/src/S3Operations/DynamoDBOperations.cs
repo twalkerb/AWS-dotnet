@@ -16,6 +16,7 @@ namespace S3Operations
         private readonly AmazonDynamoDBClient client;
         private readonly DynamoDBContext context;
         private const string EventTableName = "events";
+        public SNSOperations SNSOperations = new SNSOperations();
         public DynamoDBOperations()
         {
             client = new AmazonDynamoDBClient
@@ -44,6 +45,7 @@ namespace S3Operations
                     context.FromDocument<Event>(docItem)
                 );
             }
+            await SNSOperations.PublishMessage($"Fetched {events.Count()} Records from Dynamo DB", "Fetch Operation");
             return events;
         }
     }

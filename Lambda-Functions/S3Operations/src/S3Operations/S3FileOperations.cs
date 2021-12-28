@@ -14,7 +14,7 @@ namespace S3Operations
     {
         private readonly AmazonS3Client client;
         private const string bucket = "learners-lambda-bucket";
-        
+        public SNSOperations SNSOperations = new SNSOperations();        
         public S3FileOperations()
         {
             client = new AmazonS3Client
@@ -24,7 +24,7 @@ namespace S3Operations
         }
 
         public async Task WriteObject(string key, byte[] bytes, string contentType)
-        {            
+        {
             using (var memStream = new MemoryStream(bytes))
             {
                 var request = new PutObjectRequest
@@ -35,6 +35,7 @@ namespace S3Operations
                     ContentType = contentType,
                 };
                 await client.PutObjectAsync(request);
+                await SNSOperations.PublishMessage($"Created File on S3 Bucket: {key}", "S3 File Operation");
             }
         }
 
