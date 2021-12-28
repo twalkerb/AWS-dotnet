@@ -78,9 +78,9 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Lambda-Functions/BasicSNS/test/BasicSNS.Tests/bin/Debug/netcoreapp3.1/BasicSNS.Tests.dll",
+            "program": "${workspaceFolder}/Lambda-Functions/SnsProcessor/test/SnsProcessor.Tests/bin/Debug/netcoreapp3.1/SnsProcessor.Tests.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Lambda-Functions/BasicSNS/test/BasicSNS.Tests",
+            "cwd": "${workspaceFolder}/Lambda-Functions/SnsProcessor/test/SnsProcessor.Tests",
             "console": "externalTerminal",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
