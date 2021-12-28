@@ -73,5 +73,17 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
+        {
+            "name": "Lambda-SNS",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Lambda-Functions/BasicSNS/test/BasicSNS.Tests/bin/Debug/netcoreapp3.1/BasicSNS.Tests.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Lambda-Functions/BasicSNS/test/BasicSNS.Tests",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
     ]
 }

@@ -61,5 +61,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Lambda-Functions/BasicSNS/test/BasicSNS.Tests/BasicSNS.Tests.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
