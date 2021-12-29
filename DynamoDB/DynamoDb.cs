@@ -78,25 +78,25 @@ namespace DynamoDB
                     var request = new TransactWriteItemsRequest
                     {
                         TransactItems = new List<TransactWriteItem>
-                    {
-                        new TransactWriteItem
                         {
-                            Put = new Put
+                            new TransactWriteItem
                             {
-                                TableName = EventIndexTableName,
-                                Item = new Dictionary<string, AttributeValue>()
+                                Put = new Put
                                 {
+                                    TableName = EventIndexTableName,
+                                    Item = new Dictionary<string, AttributeValue>()
                                     {
-                                        "eventTimestamp", new AttributeValue { N = data.Key.eventTimestamp.ToString() }
+                                        {
+                                            "eventTimestamp", new AttributeValue { N = data.Key.eventTimestamp.ToString() }
+                                        },
+                                        {
+                                            "counter", new AttributeValue { N = (data.Count()).ToString() }
+                                        }
                                     },
-                                    {
-                                        "counter", new AttributeValue { N = (data.Count()).ToString() }
-                                    }
-                                },
-                                ReturnValuesOnConditionCheckFailure = ReturnValuesOnConditionCheckFailure.ALL_OLD
+                                    ReturnValuesOnConditionCheckFailure = ReturnValuesOnConditionCheckFailure.ALL_OLD
+                                }
                             }
                         }
-                    }
                     };
                     var response = await client.TransactWriteItemsAsync(request);
                     Console.WriteLine($"Transaction sent with - Timestamp - {data.Key.eventTimestamp} PUTs - {response.HttpStatusCode}");
