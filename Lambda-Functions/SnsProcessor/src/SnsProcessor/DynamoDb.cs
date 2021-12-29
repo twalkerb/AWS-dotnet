@@ -1,13 +1,12 @@
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Linq;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
 using Amazon.Runtime;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.DataModel;
+using Amazon.Lambda.Core;
 
 namespace SnsProcessor
 {
@@ -15,7 +14,7 @@ namespace SnsProcessor
     {
         private readonly AmazonDynamoDBClient client;
         private readonly DynamoDBContext context;
-        private const string logTable = "message-processor";
+        private const string logTable = "events-trigger";
 
         public DynamoDb()
         {
@@ -26,28 +25,42 @@ namespace SnsProcessor
             context = new DynamoDBContext(client);
         }
 
-        public async Task InsertTable(EventMessage message)
+        public async Task InsertTable(EventMessage eventRecord, ILambdaContext context)
         {
-            await client.UpdateItemAsync(new UpdateItemRequest
+            try
             {
-                TableName = logTable,
-                Key = new Dictionary<string, AttributeValue>
+                var request = new PutItemRequest
                 {
-                    { 
-                        "messageId", new AttributeValue($"SnsProcessor|{message.TestId}") 
+                    TableName = logTable,
+                    Item = new Dictionary<string, AttributeValue>()
+                    {
+                        {
+                            "eventMessageId", new AttributeValue { S = eventRecord.eventMessageId }
+                        },
+                        {
+                            "eventTimestamp", new AttributeValue { N = eventRecord.eventTimestamp.ToString() }
+                        },
+                        {
+                            "eventId", new AttributeValue { S =  eventRecord.eventId }
+                        },
+                        {
+                            "eventSubject", new AttributeValue { S = eventRecord.eventSubject }
+                        },
+                        {
+                            "eventMessageText", new AttributeValue { S = eventRecord.eventMessageText }
+                        },
+                        {
+                            "eventTopicArn", new AttributeValue { S = eventRecord.eventTopicArn }
+                        }
                     }
-                },
-                ExpressionAttributeValues = new Dictionary<string, AttributeValue>
-                {
-                    { 
-                        ":incr", new AttributeValue { N = "1" }
-                    },
-                    { 
-                        ":end", new AttributeValue(DateTimeOffset.UtcNow.ToString("o"))
-                    }
-                },
-                UpdateExpression = "SET MessageCount = MessageCount + :incr, EndTime = :end"
-            });
+                };
+                await client.PutItemAsync(request);
+                context.Logger.Log("Record inserted successfully!");
+            }
+            catch(Exception ex)
+            {
+                context.Logger.Log($"---Exception: {ex.Message}---");
+            }
         }
     }
 }

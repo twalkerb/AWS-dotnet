@@ -1,7 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
 using System.Threading.Tasks;
 
 using Amazon.Lambda.Core;
@@ -19,15 +16,12 @@ namespace SnsProcessor
         /// the AWS credentials will come from the IAM role associated with the function and the AWS region will be set to the
         /// region the Lambda function is executed in.
         /// </summary>
-        DynamoDb DynamoDb;
+        
         public Function()
         {            
         }
 
-        public Function(DynamoDb dynamodb)
-        {
-            DynamoDb = dynamodb;
-        }
+        public DynamoDb DynamoDb = new DynamoDb();
 
         /// <summary>
         /// This method is called for every Lambda invocation. This method takes in an SNS event object and can be used 
@@ -38,19 +32,31 @@ namespace SnsProcessor
         /// <returns></returns>
         public async Task FunctionHandler(SNSEvent evnt, ILambdaContext context)
         {
-            foreach(var record in evnt.Records)
-            {
-                await ProcessRecordAsync(record, context);
-            }
+            await ProcessRecordAsync(evnt.Records[0], context);            
         }
 
         private async Task ProcessRecordAsync(SNSEvent.SNSRecord record, ILambdaContext context)
         {
             context.Logger.LogLine($"Processed record {record.Sns.Message}");
-
-            var message = JsonSerializer.Deserialize<EventMessage>(record.Sns.Message);
-            await DynamoDb.InsertTable(message);
             
+            // TODO: record.Sns.MessageAttributes
+            try
+            {
+                var message = new EventMessage()
+                {
+                    eventId = $"SNS_{Guid.NewGuid()}",
+                    eventMessageId = record.Sns.MessageId,
+                    eventSubject = record.Sns.Subject,
+                    eventMessageText = record.Sns.Message,
+                    eventTimestamp = new DateTimeOffset(record.Sns.Timestamp).ToUnixTimeMilliseconds(),
+                    eventTopicArn = record.Sns.TopicArn                    
+                };
+                await DynamoDb.InsertTable(message, context);
+            }
+            catch(Exception ex)
+            {
+                context.Logger.Log($"---Exception: {ex.Message}---");
+            }                        
             await Task.CompletedTask;
         }
     }
