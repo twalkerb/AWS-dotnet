@@ -32,7 +32,7 @@ namespace SnsProcessor
         /// <returns></returns>
         public async Task FunctionHandler(SNSEvent evnt, ILambdaContext context)
         {
-            await ProcessRecordAsync(evnt.Records[0], context);            
+            await ProcessRecordAsync(evnt.Records[0], context);
         }
 
         private async Task ProcessRecordAsync(SNSEvent.SNSRecord record, ILambdaContext context)
@@ -49,14 +49,14 @@ namespace SnsProcessor
                     eventSubject = record.Sns.Subject,
                     eventMessageText = record.Sns.Message,
                     eventTimestamp = new DateTimeOffset(record.Sns.Timestamp).ToUnixTimeMilliseconds(),
-                    eventTopicArn = record.Sns.TopicArn                    
+                    eventTopicArn = record.Sns.TopicArn
                 };
                 await DynamoDb.InsertTable(message, context);
             }
             catch(Exception ex)
             {
                 context.Logger.Log($"---Exception: {ex.Message}---");
-            }                        
+            }
             await Task.CompletedTask;
         }
     }
