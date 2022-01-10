@@ -7,9 +7,9 @@ using Xunit;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
 
-using Lambda;
+using LambdaDemo;
 
-namespace Lambda.Tests
+namespace LambdaDemo.Tests
 {
     public class FunctionTest
     {
@@ -23,7 +23,6 @@ namespace Lambda.Tests
             var upperCase = function.FunctionHandler("hello world", context);
 
             Assert.Equal("HELLO WORLD", upperCase);
-            Console.ReadLine();
         }
     }
 }
