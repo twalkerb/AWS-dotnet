@@ -5,15 +5,17 @@ namespace Timestream
 {
     public class ConsoleApp
     {
-        public ConsoleApp()
+        Timestream Timestream;
+        public ConsoleApp(Timestream timestream)
         {
-            
+            Timestream = timestream;
         }
 
         public async Task Run()
         {
             try
             {
+                await Timestream.RunProcess();
             }            
             catch (Exception e)
             {

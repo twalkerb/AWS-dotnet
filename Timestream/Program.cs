@@ -24,7 +24,11 @@ namespace Timestream
         private static void ConfigureServices(IServiceCollection services)
         {
             services                
-                .AddSingleton<ConsoleApp>()                
+                .AddSingleton<ConsoleApp>()  
+                .AddSingleton<Timestream>()
+                .AddSingleton<TimestreamDatabase>()
+                .AddSingleton<TimestreamTable>()
+                .AddSingleton<TimestreamInsert>()
             ;
         }
     }
