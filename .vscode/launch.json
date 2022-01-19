@@ -50,6 +50,18 @@
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
+            "name": "Timestream",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/Timestream/bin/Debug/netcoreapp3.1/Timestream.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Timestream",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
             "name": "Lambda",
             "type": "coreclr",
             "request": "launch",
