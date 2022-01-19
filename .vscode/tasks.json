@@ -12,7 +12,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "build-cloudWatch",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -22,7 +22,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "build-DynamoDB",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -32,7 +32,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "build-Experimental",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -42,7 +42,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "build-Timestream",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -52,7 +52,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "build-Lambda",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -62,7 +62,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "build-Lambda-S3",
             "command": "dotnet",
             "type": "process",
             "args": [
@@ -72,7 +72,7 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "build",
+            "label": "build-Lambda-SNS",
             "command": "dotnet",
             "type": "process",
             "args": [
