@@ -25,7 +25,7 @@ namespace Timestream
             try
             {
                 await TimestreamDatabase.Main();
-                // await TimestreamTable.Main();
+                await TimestreamTable.Main();
                 await TimestreamInsert.Main();
             }
             catch (Exception ex)
