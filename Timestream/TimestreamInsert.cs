@@ -96,14 +96,17 @@ namespace Timestream
 
             foreach (string line in File.ReadLines(csvFilePath))
             {
-                string[] columns = line.Split(',');
+                string[] columns = line.Split('|');
+                if(columns.Count() > 5)
+                    continue;
+
                 var data = new EventData()
                 {
                     sourceName = columns[0],
                     eventType = columns[1],
-                    eventData = $"{columns[2]}{columns[3]}",
-                    eventDate = Convert.ToDateTime(columns[4]),
-                    counter = int.Parse(columns[5])
+                    eventData = columns[2],
+                    eventDate = columns[3],
+                    counter = int.Parse(columns[4])
                 };
 
                 List<Dimension> dimensions = new List<Dimension> {
@@ -120,7 +123,7 @@ namespace Timestream
                     MeasureName = "counter",
                     MeasureValue = "1",
                     MeasureValueType = MeasureValueType.BIGINT,
-                    Time = recordTime.ToString(),
+                    Time = DateTimeOffset.Parse(data.eventDate).ToUnixTimeMilliseconds().ToString(),
                     TimeUnit = TimeUnit.MILLISECONDS
                 };
 

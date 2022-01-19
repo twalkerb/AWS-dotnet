@@ -6,7 +6,7 @@ namespace Timestream
     {
         public string sourceName;
         public string eventType;
-        public DateTime eventDate;
+        public string eventDate;
         public string eventData;
         public int counter;
     }
