@@ -14,7 +14,7 @@ namespace Timestream
         private readonly AmazonTimestreamWriteConfig writeClientConfig;
         private readonly string databaseName = "telemetryDB";
         private readonly string tableName = "event-data";
-        private readonly string csvFilePath = "DataFile.csv";
+        private readonly string csvFilePath = "~DataFile.csv";
         public TimestreamInsert()
         {
             writeClientConfig = new AmazonTimestreamWriteConfig
@@ -91,6 +91,9 @@ namespace Timestream
 
             List<Task> writetasks = new List<Task>();
 
+            DateTimeOffset now = DateTimeOffset.UtcNow;
+            long currentTime = now.ToUnixTimeMilliseconds();
+
             foreach (string line in File.ReadLines(csvFilePath))
             {
                 string[] columns = line.Split(',');
@@ -109,7 +112,7 @@ namespace Timestream
                     new Dimension { Name = "eventData", Value = data.eventData }
                 };
 
-                // long recordTime = currentTime - counter * 50;
+                long recordTime = currentTime - counter * 50;
 
                 var record = new Record
                 {
@@ -117,7 +120,7 @@ namespace Timestream
                     MeasureName = "counter",
                     MeasureValue = "1",
                     MeasureValueType = MeasureValueType.BIGINT,
-                    Time = (DateTimeToTimestamp(data.eventDate)).ToString(),
+                    Time = recordTime.ToString(),
                     TimeUnit = TimeUnit.MILLISECONDS
                 };
 
