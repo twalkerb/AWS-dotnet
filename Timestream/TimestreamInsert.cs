@@ -12,9 +12,9 @@ namespace Timestream
     {
         private readonly AmazonTimestreamWriteClient writeClient;
         private readonly AmazonTimestreamWriteConfig writeClientConfig;
-        private readonly string databaseName = "telemetryDB";
-        private readonly string tableName = "event-data";
-        private readonly string csvFilePath = "~DataFile.csv";
+        private readonly string databaseName;
+        private readonly string tableName;
+        private readonly string filePath;
         public TimestreamInsert()
         {
             writeClientConfig = new AmazonTimestreamWriteConfig
@@ -23,6 +23,9 @@ namespace Timestream
                 MaxErrorRetry = 10
             };
             writeClient = new AmazonTimestreamWriteClient(writeClientConfig);
+            databaseName = Constants.databaseName;
+            tableName = Constants.tableName;
+            filePath = Constants.filePath;
         }
 
         public async Task Main()
@@ -94,9 +97,9 @@ namespace Timestream
             DateTimeOffset now = DateTimeOffset.UtcNow;
             long currentTime = now.ToUnixTimeMilliseconds();
 
-            foreach (string line in File.ReadLines(csvFilePath))
+            foreach (string line in File.ReadLines(filePath))
             {
-                string[] columns = line.Split('|');
+                string[] columns = line.Split('^');
                 if(columns.Count() > 5)
                     continue;
 
@@ -184,9 +187,6 @@ namespace Timestream
                 Console.WriteLine("Write records failure:" + e.ToString());
             }
         }
-
-        private long DateTimeToTimestamp(DateTime dateTime) =>
-            new DateTimeOffset(dateTime).ToUnixTimeMilliseconds();
 
         private void PrintRejectedRecordsException(RejectedRecordsException e)
         {

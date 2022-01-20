@@ -434,3 +434,4 @@ $RECYCLE.BIN/
 
 ## Ignore data file
 ~*.csv
+~*.txt

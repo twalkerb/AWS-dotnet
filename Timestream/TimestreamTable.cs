@@ -10,9 +10,9 @@ namespace Timestream
     {
         private readonly AmazonTimestreamWriteClient writeClient;
         private readonly AmazonTimestreamWriteConfig writeClientConfig;
-        private readonly string databaseName = "telemetryDB";
-        private readonly string s3ErrorReportBucketName = "my-learners-bucket";
-        private readonly string tableName = "event-data";
+        private readonly string databaseName;
+        private readonly string s3ErrorReportBucketName;
+        private readonly string tableName;
         public TimestreamTable()
         {
             writeClientConfig = new AmazonTimestreamWriteConfig
@@ -21,6 +21,9 @@ namespace Timestream
                 MaxErrorRetry = 10
             };
             writeClient = new AmazonTimestreamWriteClient(writeClientConfig);
+            databaseName = Constants.databaseName;
+            tableName = Constants.tableName;
+            s3ErrorReportBucketName = Constants.s3ErrorReportBucketName;
         }
 
         public async Task Main()

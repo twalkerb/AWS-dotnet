@@ -10,7 +10,7 @@ namespace Timestream
     {
         private readonly AmazonTimestreamWriteClient writeClient;
         private readonly AmazonTimestreamWriteConfig writeClientConfig;
-        private readonly string databaseName = "telemetryDB";
+        private readonly string databaseName;
         
         public TimestreamDatabase()
         {
@@ -20,6 +20,7 @@ namespace Timestream
                 MaxErrorRetry = 10
             };
             writeClient = new AmazonTimestreamWriteClient(writeClientConfig);
+            databaseName = Constants.databaseName;
         }
 
         public async Task Main()
