@@ -50,8 +50,8 @@ namespace Timestream
                     TableName = tableName,
                     RetentionProperties = new RetentionProperties
                     {
-                        MagneticStoreRetentionPeriodInDays = 30,
-                        MemoryStoreRetentionPeriodInHours = 6
+                        MagneticStoreRetentionPeriodInDays = Constants.CT_TTL_DAYS,
+                        MemoryStoreRetentionPeriodInHours = Constants.HT_TTL_HOURS
                     },
                     // Enable MagneticStoreWrite
                     MagneticStoreWriteProperties = new MagneticStoreWriteProperties
@@ -65,7 +65,7 @@ namespace Timestream
                                 BucketName = s3ErrorReportBucketName,
                                 EncryptionOption = "SSE_S3",
                             },
-                        },
+                        }
                     }
                 };
                 await writeClient.CreateTableAsync(createTableRequest);
