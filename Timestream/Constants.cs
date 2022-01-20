@@ -8,8 +8,7 @@ namespace Timestream
     public class Constants
     {      
         public const string databaseName = "telemetryDB";
-        // public const string tableName = "event-data";
-        public const string tableName = "diwali-event-data-1";
+        public const string tableName = "diwali-event-data";
         public const string filePath = "~DataFile.txt";        
         public const string s3ErrorReportBucketName = "my-learners-bucket";
         public const long HT_TTL_HOURS = 1;

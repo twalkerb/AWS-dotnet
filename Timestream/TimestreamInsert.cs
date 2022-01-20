@@ -32,6 +32,7 @@ namespace Timestream
         {
             try
             {
+                // await WriteRecords();
                 await BulkWriteRecordsMultiMeasure();
             }
             catch (Exception ex)
@@ -42,17 +43,18 @@ namespace Timestream
 
         private async Task WriteRecords()
         {
-            DateTimeOffset now = DateTimeOffset.UtcNow;
+            DateTimeOffset now = new DateTimeOffset(new DateTime(2021, 10, 15, 12, 00, 00));
+            
             string currentTimeString = (now.ToUnixTimeMilliseconds()).ToString();
 
             List<Dimension> dimensions = new List<Dimension>
             {
-                new Dimension { Name = "eventType", Value = "Test-2" },
+                new Dimension { Name = "eventType", Value = "Test-3" },
                 new Dimension { Name = "source", Value = "Source" },
-                new Dimension { Name = "eventData", Value = "Testing Data" }
+                new Dimension { Name = "eventData", Value = "333333-444444" }
 
             };
-            var eventData = new Record
+            var record = new Record
             {
                 Dimensions = dimensions,
                 MeasureName = "counter",
@@ -62,9 +64,51 @@ namespace Timestream
                 TimeUnit = TimeUnit.MILLISECONDS
             };
 
+            // var record = new Record
+            //     {
+            //         Dimensions = dimensions,
+            //         MeasureName = "telemetry_1",                   
+            //         MeasureValues = new List<MeasureValue>{
+            //                         new MeasureValue{
+            //                             Name= "counter",
+            //                             Value= "1",
+            //                             Type= "BIGINT",
+            //                         },
+            //                         new MeasureValue{
+            //                             Name= "eventData",
+            //                             Value= "xxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+            //                             Type= "VARCHAR",
+            //                         }
+            //                     },
+            //         MeasureValueType = MeasureValueType.BIGINT,
+            //         Time = currentTimeString,
+            //         TimeUnit = TimeUnit.MILLISECONDS
+            //     };
+            // var record = new Record
+            // {
+            //     Dimensions = dimensions,
+            //     MeasureName = "source",
+            //     MeasureValue = data.sourceName,
+            //     MeasureValues = new List<MeasureValue>{
+            //                     new MeasureValue{
+            //                         Name= "counter",
+            //                         Value= "1",
+            //                         Type= "BIGINT",
+            //                     },
+            //                     new MeasureValue{
+            //                         Name= "eventData",
+            //                         Value= data.eventData,
+            //                         Type= "VARCHAR",
+            //                     }
+            //                 },
+            //     MeasureValueType = MeasureValueType.MULTI,
+            //     Time = DateTimeOffset.Parse(data.eventDate).ToUnixTimeMilliseconds().ToString(),
+            //     TimeUnit = TimeUnit.MILLISECONDS
+            // };
+
 
             List<Record> records = new List<Record>();
-            records.Add(eventData);
+            records.Add(record);
 
             try
             {
@@ -75,6 +119,7 @@ namespace Timestream
                     Records = records
                 };
                 WriteRecordsResponse response = await writeClient.WriteRecordsAsync(writeRecordsRequest);
+                response = await writeClient.WriteRecordsAsync(writeRecordsRequest);
                 Console.WriteLine($"Write records status code: {response.HttpStatusCode.ToString()}");
             }
             catch (RejectedRecordsException e)
@@ -86,13 +131,11 @@ namespace Timestream
                 Console.WriteLine("Write records failure:" + e.ToString());
             }
         }
-
+        
         public async Task BulkWriteRecordsMultiMeasure()
         {
             List<Record> records = new List<Record>();
             int counter = 0;
-
-            List<Task> writetasks = new List<Task>();
 
             DateTimeOffset now = DateTimeOffset.UtcNow;
             long currentTime = now.ToUnixTimeMilliseconds();
@@ -100,14 +143,14 @@ namespace Timestream
             foreach (string line in File.ReadLines(filePath))
             {
                 string[] columns = line.Split('^');
-                if(columns.Count() > 5)
+                if (columns.Count() > 5)
                     continue;
 
                 var data = new EventData()
                 {
                     sourceName = columns[0],
                     eventType = columns[1],
-                    eventData = columns[2],
+                    eventData = (columns[2]).Length > 2048 ? (columns[2].Substring(0, 2048)) : columns[2],
                     eventDate = columns[3],
                     counter = int.Parse(columns[4])
                 };
@@ -124,7 +167,7 @@ namespace Timestream
                 {
                     Dimensions = dimensions,
                     MeasureName = "counter",
-                    MeasureValue = "1",
+                    MeasureValue = data.counter.ToString(),
                     MeasureValueType = MeasureValueType.BIGINT,
                     Time = DateTimeOffset.Parse(data.eventDate).ToUnixTimeMilliseconds().ToString(),
                     TimeUnit = TimeUnit.MILLISECONDS
@@ -136,18 +179,15 @@ namespace Timestream
                 // when the batch hits the max size, submit the batch
                 if (records.Count == 100)
                 {
-                    writetasks.Add(SubmitBatchAsync(records, counter));
+                    await SubmitBatchAsync(records, counter);
                     records.Clear();
                 }
             }
 
             if (records.Count != 0)
             {
-                writetasks.Add(SubmitBatchAsync(records, counter));
+                await SubmitBatchAsync(records, counter);
             }
-
-            await Task.WhenAll(writetasks.ToArray());
-
             Console.WriteLine($"Ingested {counter} records.");
         }
 
@@ -181,6 +221,10 @@ namespace Timestream
                 };
                 WriteRecordsResponse response = await writeClient.WriteRecordsAsync(writeRecordsRequest);
                 Console.WriteLine($"Processed {counter} records. Write records status code:{response.HttpStatusCode.ToString()}");
+            }
+            catch (RejectedRecordsException e)
+            {
+                PrintRejectedRecordsException(e);
             }
             catch (Exception e)
             {
