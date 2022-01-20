@@ -29,6 +29,7 @@ namespace Timestream
                 .AddSingleton<TimestreamDatabase>()
                 .AddSingleton<TimestreamTable>()
                 .AddSingleton<TimestreamInsert>()
+                .AddSingleton<SampleTimestream>()
             ;
         }
     }

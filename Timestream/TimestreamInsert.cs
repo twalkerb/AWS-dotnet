@@ -150,7 +150,7 @@ namespace Timestream
                 {
                     sourceName = columns[0],
                     eventType = columns[1],
-                    eventData = (columns[2]).Length > 2048 ? (columns[2].Substring(0, 2048)) : columns[2],
+                    eventData = (columns[2]).Length >= 2048 ? (columns[2].Substring(0, 2047)) : columns[2],
                     eventDate = columns[3],
                     counter = int.Parse(columns[4])
                 };
@@ -161,6 +161,7 @@ namespace Timestream
                     new Dimension { Name = "eventData", Value = data.eventData }
                 };
 
+                // long recordTime = currentTime - counter * 50;
                 long recordTime = currentTime - counter * 50;
 
                 var record = new Record
@@ -173,15 +174,18 @@ namespace Timestream
                     TimeUnit = TimeUnit.MILLISECONDS
                 };
 
-                records.Add(record);
                 counter++;
+                records.Add(record);
+                await SubmitBatchAsync(records, counter);
+                records.Clear();
 
-                // when the batch hits the max size, submit the batch
-                if (records.Count == 100)
-                {
-                    await SubmitBatchAsync(records, counter);
-                    records.Clear();
-                }
+                // // when the batch hits the max size, submit the batch
+                // records.Add(record);
+                // if (records.Count == 100)
+                // {
+                //     await SubmitBatchAsync(records, counter);
+                //     records.Clear();
+                // }
             }
 
             if (records.Count != 0)

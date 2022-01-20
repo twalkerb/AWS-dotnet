@@ -6,16 +6,19 @@ namespace Timestream
     public class ConsoleApp
     {
         Timestream Timestream;
-        public ConsoleApp(Timestream timestream)
+        SampleTimestream SampleTimestream;
+        public ConsoleApp(Timestream timestream, SampleTimestream sampleTimestream)
         {
             Timestream = timestream;
+            SampleTimestream = sampleTimestream;
         }
 
         public async Task Run()
         {
             try
             {
-                await Timestream.RunProcess();
+                // await Timestream.RunProcess();
+                await SampleTimestream.MainAsync();
             }            
             catch (Exception e)
             {
