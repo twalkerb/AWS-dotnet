@@ -43,16 +43,15 @@ namespace Timestream
 
         private async Task WriteRecords()
         {
-            DateTimeOffset now = new DateTimeOffset(new DateTime(2021, 10, 15, 12, 00, 00));
+            DateTimeOffset now = new DateTimeOffset(new DateTime(2022, 01, 15, 12, 00, 00));
             
             string currentTimeString = (now.ToUnixTimeMilliseconds()).ToString();
 
             List<Dimension> dimensions = new List<Dimension>
             {
-                new Dimension { Name = "eventType", Value = "Test-3" },
-                new Dimension { Name = "source", Value = "Source" },
-                new Dimension { Name = "eventData", Value = "333333-444444" }
-
+                new Dimension { Name = "eventType", Value = "Resolve" },
+                new Dimension { Name = "source", Value = "sds-xref-virtual-agent" },
+                new Dimension { Name = "eventData", Value = "{ProductName:P1620 OPI AVOJUICE GINGER LILY,ManufacturerName:HFC PRESTIGE INTL CANADA INC-JDA CA,MfrPartNumber:,WorkItemId:1668744,ProductId:3587270,UpcFound:false,Upc:,Reason:resolve,ClientRequestId:20253600,ClientProductId:23448186,SystemId:30,DecisionComment:Predicted from Model2,ScorePrediction:0.0,ProductPrediction:3587270}" }
             };
             var record = new Record
             {
@@ -119,7 +118,6 @@ namespace Timestream
                     Records = records
                 };
                 WriteRecordsResponse response = await writeClient.WriteRecordsAsync(writeRecordsRequest);
-                response = await writeClient.WriteRecordsAsync(writeRecordsRequest);
                 Console.WriteLine($"Write records status code: {response.HttpStatusCode.ToString()}");
             }
             catch (RejectedRecordsException e)
@@ -150,7 +148,7 @@ namespace Timestream
                 {
                     sourceName = columns[0],
                     eventType = columns[1],
-                    eventData = (columns[2]).Length >= 2048 ? (columns[2].Substring(0, 2047)) : columns[2],
+                    eventData = (columns[2]),
                     eventDate = columns[3],
                     counter = int.Parse(columns[4])
                 };

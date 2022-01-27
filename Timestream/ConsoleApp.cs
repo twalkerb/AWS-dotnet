@@ -17,8 +17,8 @@ namespace Timestream
         {
             try
             {
-                // await Timestream.RunProcess();
-                await SampleTimestream.MainAsync();
+                await Timestream.RunProcess();
+                // await SampleTimestream.MainAsync();
             }            
             catch (Exception e)
             {

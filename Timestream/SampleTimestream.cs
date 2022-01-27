@@ -25,7 +25,7 @@ namespace Timestream
             writeClientConfig = new AmazonTimestreamWriteConfig
             {
                 RegionEndpoint = Amazon.RegionEndpoint.USEast2,
-                Timeout = TimeSpan.FromSeconds(10000),
+                // Timeout = TimeSpan.FromSeconds(10000000000),
                 MaxErrorRetry = 10
             };
             writeClient = new AmazonTimestreamWriteClient(writeClientConfig);
@@ -37,13 +37,13 @@ namespace Timestream
             // await ListDatabases();
 
             // await CreateTable(DATABASE_NAME,TABLE_NAME);
-            // await DescribeTable(DATABASE_NAME,TABLE_NAME);
+            await DescribeTable(DATABASE_NAME,TABLE_NAME);
             // await ListTables(DATABASE_NAME);
             // await UpdateTable(DATABASE_NAME,TABLE_NAME);
 
             // Simple records ingestion
-            await WriteRecordsMultiMeasure(DATABASE_NAME,TABLE_NAME);
-            // await WriteRecordsWithCommonAttributes(DATABASE_NAME,TABLE_NAME);
+            // await WriteRecordsMultiMeasure(DATABASE_NAME,TABLE_NAME);
+            // await WriteRecordsWithCommonAttributes(DATABASE_NAME, TABLE_NAME);
 
             // write multi value records
             // await CreateDatabase(MultiMeasureValueSampleDb);
@@ -51,9 +51,14 @@ namespace Timestream
             // await WriteRecordsMultiMeasureValueSingleRecord(MultiMeasureValueSampleDb, MultiMeasureValueSampleTable);
             // await WriteRecordsMultiMeasureValueMultipleRecords(MultiMeasureValueSampleDb, MultiMeasureValueSampleTable);
 
-            // if (filePath != null)            
-            //     await BulkWriteRecordsMultiMeasure();
-            
+            if (filePath != null)
+            {                
+                var bulkWriteTableName = "mass-logger";
+                await CreateTable(MultiMeasureValueSampleDb, bulkWriteTableName);
+                await BulkWriteRecordsMultiMeasure(MultiMeasureValueSampleDb, bulkWriteTableName);
+            }
+                
+
         }
 
         private async Task CreateDatabase(string dbName)
@@ -438,7 +443,7 @@ namespace Timestream
             var computationalRecord = new Record
             {
                 MeasureName = "cpu_memory",
-                MeasureValues = new List<MeasureValue> {cpuUtilization, memoryUtilization},
+                MeasureValues = new List<MeasureValue> { cpuUtilization, memoryUtilization },
                 MeasureValueType = "MULTI"
             };
 
@@ -507,7 +512,7 @@ namespace Timestream
             var computationalRecord = new Record
             {
                 MeasureName = "computational_utilization",
-                MeasureValues = new List<MeasureValue> {cpuUtilization, memoryUtilization, activeCores},
+                MeasureValues = new List<MeasureValue> { cpuUtilization, memoryUtilization, activeCores },
                 MeasureValueType = "MULTI"
             };
 
@@ -540,13 +545,13 @@ namespace Timestream
             }
         }
 
-        private async Task BulkWriteRecordsMultiMeasure()
+        private async Task BulkWriteRecordsMultiMeasure(string dbName, string tableName)
         {
             List<Record> records = new List<Record>();
             long currentTime = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             int counter = 0;
 
-            List<Task> writetasks = new List<Task>();
+            // List<Task> writetasks = new List<Task>();
 
             foreach (string line in File.ReadLines(filePath))
             {
@@ -560,7 +565,8 @@ namespace Timestream
 
                 long recordTime = currentTime - counter * 50;
 
-                var record = new Record {
+                var record = new Record
+                {
                     Dimensions = dimensions,
                     MeasureName = "metrics",
                     MeasureValues = GetMeasureValues(columns.Skip(8).ToArray()),
@@ -571,20 +577,22 @@ namespace Timestream
                 records.Add(record);
                 counter++;
 
+                await SubmitBatchAsync(records, counter, dbName, tableName);
+                records.Clear();
                 // when the batch hits the max size, submit the batch
-                if (records.Count == 100)
-                {
-                    writetasks.Add(SubmitBatchAsync(records, counter));
-                    records.Clear();
-                }
+                // if (records.Count == 100)
+                // {
+                //     writetasks.Add(SubmitBatchAsync(records, counter));
+                //     records.Clear();
+                // }
             }
 
-            if(records.Count != 0)
-            {
-                writetasks.Add(SubmitBatchAsync(records, counter));
-            }
+            // if (records.Count != 0)
+            // {
+            //     writetasks.Add(SubmitBatchAsync(records, counter));
+            // }
 
-            await Task.WhenAll(writetasks.ToArray());
+            // await Task.WhenAll(writetasks.ToArray());
 
             Console.WriteLine($"Ingested {counter} records.");
         }
@@ -592,28 +600,28 @@ namespace Timestream
         private List<MeasureValue> GetMeasureValues(string[] columns)
         {
             List<MeasureValue> measureValues = new List<MeasureValue>();
-            for(int i = 0; i < columns.Length; i += 3)
+            for (int i = 0; i < columns.Length; i += 3)
             {
                 measureValues.Add(
                     new MeasureValue
                     {
-                        Name= columns[i],
-                        Value= columns[i+1],
-                        Type= columns[i+2],
+                        Name = columns[i],
+                        Value = columns[i + 1],
+                        Type = columns[i + 2],
                     }
                 );
             }
-          return measureValues;
+            return measureValues;
         }
 
-        private async Task SubmitBatchAsync(List<Record> records, int counter)
+        private async Task SubmitBatchAsync(List<Record> records, int counter,string dbName, string tableName)
         {
             try
             {
                 var writeRecordsRequest = new WriteRecordsRequest
                 {
-                    DatabaseName = DATABASE_NAME,
-                    TableName = TABLE_NAME,
+                    DatabaseName = dbName,
+                    TableName = tableName,
                     Records = records
                 };
                 WriteRecordsResponse response = await writeClient.WriteRecordsAsync(writeRecordsRequest);

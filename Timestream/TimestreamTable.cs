@@ -30,11 +30,31 @@ namespace Timestream
         {
             try
             {
+                await DeleteTable();
                 await CreateTable();
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        public async Task DeleteTable()
+        {
+            Console.WriteLine($"Deleting table {tableName}");
+            try
+            {
+                var deleteTableRequest = new DeleteTableRequest
+                {
+                    DatabaseName = databaseName,
+                    TableName = tableName
+                };
+                DeleteTableResponse response = await writeClient.DeleteTableAsync(deleteTableRequest);
+                Console.WriteLine($"Table {tableName} delete request status: {response.HttpStatusCode}");
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Exception while deleting table: {e}");
             }
         }
 
