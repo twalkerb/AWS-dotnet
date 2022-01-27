@@ -15,7 +15,9 @@ namespace Timestream
         private readonly string databaseName;
         private readonly string tableName;
         private readonly string filePath;
-        public TimestreamInsert()
+        
+        Compression Compression;
+        public TimestreamInsert(Compression compression)
         {
             writeClientConfig = new AmazonTimestreamWriteConfig
             {
@@ -26,6 +28,7 @@ namespace Timestream
             databaseName = Constants.databaseName;
             tableName = Constants.tableName;
             filePath = Constants.filePath;
+            Compression = compression;
         }
 
         public async Task Main()
@@ -137,8 +140,9 @@ namespace Timestream
 
             DateTimeOffset now = DateTimeOffset.UtcNow;
             long currentTime = now.ToUnixTimeMilliseconds();
+            string[] lines = File.ReadAllLines(filePath);
 
-            foreach (string line in File.ReadLines(filePath))
+            foreach (string line in lines)
             {
                 string[] columns = line.Split('^');
                 if (columns.Count() > 5)
@@ -148,10 +152,12 @@ namespace Timestream
                 {
                     sourceName = columns[0],
                     eventType = columns[1],
-                    eventData = (columns[2]),
+                    eventData = (await Compression.ToBrotliAsync(columns[2])),
                     eventDate = columns[3],
                     counter = int.Parse(columns[4])
                 };
+
+                // string decompressedString = await Compression.FromBrotliAsync(compressedString);
 
                 List<Dimension> dimensions = new List<Dimension> {
                     new Dimension { Name = "source", Value = data.sourceName },

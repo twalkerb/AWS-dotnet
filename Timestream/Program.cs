@@ -30,6 +30,7 @@ namespace Timestream
                 .AddSingleton<TimestreamTable>()
                 .AddSingleton<TimestreamInsert>()
                 .AddSingleton<SampleTimestream>()
+                .AddSingleton<Compression>()
             ;
         }
     }
