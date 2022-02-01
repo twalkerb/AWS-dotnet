@@ -97,5 +97,17 @@
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
+        {
+            "name": "Aurora-PostgreSql",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-AuroraPgSql",
+            "program": "${workspaceFolder}/RDS/Aurora-PostgreSQL/bin/Debug/netcoreapp3.1/Aurora-PostgreSQL.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/RDS/Aurora-PostgreSQL",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        }
     ]
 }

@@ -81,5 +81,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build-AuroraPgSql",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/RDS/Aurora-PostgreSQL/Aurora-PostgreSQL.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
