@@ -42,34 +42,23 @@ namespace TimeZoneService
         public APIGatewayProxyResponse GetSingleTimeZone(APIGatewayProxyRequest request, ILambdaContext context)
         {
             string timeZoneId = string.Empty;
-            context.Logger.Log("I GET ITTTTT!!!");
-            context.Logger.Log(JsonConvert.SerializeObject(request));
+
             if (request.PathParameters != null && request.PathParameters.ContainsKey("Id"))
                 timeZoneId = request.PathParameters["Id"];
 
             if (!String.IsNullOrEmpty(timeZoneId))
             {
-                // Url decode the TZID
-                timeZoneId = WebUtility.UrlDecode(timeZoneId);
-
-                var location = TzdbDateTimeZoneSource.Default.ZoneLocations.FirstOrDefault(
-                    l => String.Compare(l.ZoneId, timeZoneId, StringComparison.OrdinalIgnoreCase) == 0);
-                
-                if (location != null)
+                return new APIGatewayProxyResponse
                 {
-                    return new APIGatewayProxyResponse
-                    {
-                        StatusCode = (int)HttpStatusCode.OK,
-                        // Body = JsonConvert.SerializeObject(GetZoneInfo(location)),
-                        Body = JsonConvert.SerializeObject(request.PathParameters),
-                        Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
-                    };
-                }
+                    StatusCode = (int)HttpStatusCode.OK,
+                    Body = JsonConvert.SerializeObject(timeZoneId),
+                    Headers = new Dictionary<string, string> { { "Content-Type", "application/json" } }
+                };
             }
 
             return new APIGatewayProxyResponse
             {
-                StatusCode = (int)HttpStatusCode.NotFound
+                StatusCode = (int)HttpStatusCode.NotFound,
             };
         }
 
@@ -82,12 +71,13 @@ namespace TimeZoneService
             var endOfYear = zone.AtStrictly(new LocalDate(2018, 1, 1).AtMidnight().PlusNanoseconds(-1));
 
             // Get all intervals for current year
-            var intervals = zone.GetZoneIntervals(startOfYear.ToInstant(), endOfYear.ToInstant()).ToList(); 
+            var intervals = zone.GetZoneIntervals(startOfYear.ToInstant(), endOfYear.ToInstant()).ToList();
 
             // Try grab interval with DST. If none present, grab first one we can find
             var interval = intervals.FirstOrDefault(i => i.Savings.Seconds > 0) ?? intervals.FirstOrDefault();
-            
-            dynamic data = new {
+
+            dynamic data = new
+            {
                 TimeZoneId = location.ZoneId,
                 Offset = interval.StandardOffset.ToTimeSpan(),
                 DstOffset = interval.WallOffset.ToTimeSpan(),
