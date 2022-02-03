@@ -435,5 +435,5 @@ $RECYCLE.BIN/
 ## Ignore data file
 ~*.csv
 ~*.txt
-
+~file.json
 *.ini
