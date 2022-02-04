@@ -438,3 +438,4 @@ $RECYCLE.BIN/
 ~file.json
 *.bak
 *.ini
+*deploy.ps1
