@@ -11,6 +11,7 @@ namespace SampleMigration
         protected override void Init(IWebHostBuilder builder)
         {
             builder
+                .UseLambdaServer()
                 .UseStartup<Startup>();
         }
     }
