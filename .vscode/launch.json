@@ -108,6 +108,18 @@
             "console": "externalTerminal",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "SampleMigration",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-SampleMigration",
+            "program": "${workspaceFolder}/Serverless/SampleMigration/bin/Debug/netcoreapp3.1/SampleMigration.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Serverless/SampleMigration",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }

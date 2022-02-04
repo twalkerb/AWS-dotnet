@@ -91,5 +91,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build-SampleMigration",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Serverless/SampleMigration/SampleMigration.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
