@@ -28,7 +28,7 @@
             "RootResource": {
               "Type": "Api",
               "Properties": {
-                "Path": "/",
+                "Path": "api/",
                 "Method": "ANY"
               }
             }
