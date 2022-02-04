@@ -1,11 +1,10 @@
-﻿using System;
+using System;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-
 namespace SampleMigration
 {
-    class Program
+    public class LocalEntryPoint
     {
         public static void Main(string[] args)
         {
@@ -34,6 +33,5 @@ namespace SampleMigration
             builder.UseUrls(GetServerUrl("*", defaultPort));
             return builder.Build();
         }
-        
     }
 }
