@@ -21,7 +21,7 @@ namespace SampleMigration.Web
         {
             var res = context.Response;
             res.ContentType = "text/plain";
-            var body = System.Text.Encoding.UTF8.GetBytes("Let's start!");
+            var body = System.Text.Encoding.UTF8.GetBytes("I'm deployed using SAM deployment process.");
             return res.Body.WriteAsync(body, 0, body.Length);
         }
     }
