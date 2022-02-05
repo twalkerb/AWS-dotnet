@@ -438,7 +438,7 @@ $RECYCLE.BIN/
 ~file.json
 *.bak
 *.ini
-*deploy.ps1
+# *.ps1
 
 ## Ignore aws-sam
 .aws-sam
