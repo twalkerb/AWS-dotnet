@@ -14,14 +14,23 @@ namespace SampleMigration.Web
         public (int, string, string, RequestDelegate)[] Routes =>
             new[]
             {
+                (0, "GET", "/", Route(SayHello)),
                 (0, "GET", "/status", Route(GetStatus)),
             };
         
+        private Task SayHello(HttpContext context)
+        {
+            var res = context.Response;
+            res.ContentType = "text/plain";
+            var body = System.Text.Encoding.UTF8.GetBytes("Hello");
+            return res.Body.WriteAsync(body, 0, body.Length);
+        }
+
         private Task GetStatus(HttpContext context)
         {
             var res = context.Response;
             res.ContentType = "text/plain";
-            var body = System.Text.Encoding.UTF8.GetBytes("I'm deployed using SAM deployment process.");
+            var body = System.Text.Encoding.UTF8.GetBytes("Status is all good!");
             return res.Body.WriteAsync(body, 0, body.Length);
         }
     }
