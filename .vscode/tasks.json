@@ -111,5 +111,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build-InvokeLambda",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Migration-Samples/InvokeLambdaApp/InvokeLambdaApp.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }

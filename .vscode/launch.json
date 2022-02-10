@@ -132,6 +132,18 @@
             "console": "externalTerminal",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
-        }
+        },
+        {
+            "name": "InvokeLambda",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-InvokeLambda",
+            "program": "${workspaceFolder}/Migration-Samples/InvokeLambdaApp/bin/Debug/netcoreapp3.1/InvokeLambdaApp.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Migration-Samples/InvokeLambdaApp",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
     ]
 }
