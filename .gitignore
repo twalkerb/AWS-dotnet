@@ -436,7 +436,6 @@ $RECYCLE.BIN/
 ~*.csv
 ~*.txt
 ~file.json
-*.bak
 *.ini
 *deploy.ps1
 
