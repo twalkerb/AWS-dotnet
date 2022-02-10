@@ -120,6 +120,18 @@
             "console": "externalTerminal",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "Core-SampleMigration",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build-CoreSampleMigration",
+            "program": "${workspaceFolder}/Migration-Samples/CoreMigration/bin/Debug/netcoreapp3.1/SampleMigration.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/Migration-Samples/CoreMigration",
+            "console": "externalTerminal",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
         }
     ]
 }

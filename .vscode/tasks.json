@@ -101,5 +101,15 @@
             ],
             "problemMatcher": "$msCompile"
         },
+        {
+            "label": "build-CoreSampleMigration",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/Migration-Samples/CoreMigration/SampleMigration.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
